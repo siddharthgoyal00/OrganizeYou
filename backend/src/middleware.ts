@@ -1,4 +1,4 @@
-import { string } from "zod";
+
 import { JWT_SECRET } from "./config.js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 const {verify} = jwt;

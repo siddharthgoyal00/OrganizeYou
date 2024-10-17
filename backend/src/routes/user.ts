@@ -1,11 +1,11 @@
 // import express from "express";
 import express, { NextFunction, Request, Response } from "express";
 import { z } from "zod";
-import { User } from "../db.js";
+import { User } from "../db";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config.js";
+import { JWT_SECRET } from "../config";
 //import { authMiddleware } from "../middleware.js";
-export const app = express();
+// export const app = express();
  const userRouter = express.Router();
 
 const signUpSchema = z.object({
@@ -15,24 +15,17 @@ const signUpSchema = z.object({
   lastName: z.string(),
 });
 
-userRouter.post(
-  "/login",
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-    } catch (error) {}
-  }
-);
 
 userRouter.post(
   "/signup",
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     console.log(req.headers);
     console.log(req.body);
 
     const parsed = signUpSchema.safeParse(req.body);
     console.log(parsed.error);
     if (!parsed.success && !req.body) {
-      return res.json({
+       res.json({
         msg: "wrong inputs / Email already taken",
       });
     } else {
@@ -40,7 +33,7 @@ userRouter.post(
         email: req.body.email,
       });
       if (existingUser) {
-        return res.json({
+         res.json({
           msg: "wrong inputs / Email already taken",
         });
       } else {
@@ -66,12 +59,12 @@ const LoginSchema = z.object({
   password: z.string(),
 });
 
-userRouter.post("/login",
-async (req: Request, res: Response, next: NextFunction) => {
+userRouter.post("/login",//
+async (req: Request, res: Response) => {
     try {
       const parsed = LoginSchema.safeParse(req.body);
       if (!parsed.success) {
-        return res.status(411).json({
+         res.status(411).json({
           msg: "input incorrect",
         });
       }
@@ -95,6 +88,6 @@ async (req: Request, res: Response, next: NextFunction) => {
   }
 );
 
-app.use('/user',userRouter)
+
 
 export  {userRouter};
