@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config";
 //import { authMiddleware } from "../middleware.js";
 // export const app = express();
- const userRouter = express.Router();
+const userRouter = express.Router();
 
 const signUpSchema = z.object({
   email: z.string().email(),
@@ -15,56 +15,53 @@ const signUpSchema = z.object({
   lastName: z.string(),
 });
 
+userRouter.post("/signup", async (req: Request, res: Response) => {
+  console.log(req.headers);
+  console.log(req.body);
 
-userRouter.post(
-  "/signup",
-  async (req: Request, res: Response) => {
-    console.log(req.headers);
-    console.log(req.body);
-
-    const parsed = signUpSchema.safeParse(req.body);
-    console.log(parsed.error);
-    if (!parsed.success && !req.body) {
-       res.json({
+  const parsed = signUpSchema.safeParse(req.body);
+  console.log(parsed.error);
+  if (!parsed.success && !req.body) {
+    res.json({
+      msg: "wrong inputs / Email already taken",
+    });
+  } else {
+    const existingUser = await User.findOne({
+      email: req.body.email,
+    });
+    if (existingUser) {
+      res.json({
         msg: "wrong inputs / Email already taken",
       });
     } else {
-      const existingUser = await User.findOne({
+      const user = await User.create({
         email: req.body.email,
+        password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
       });
-      if (existingUser) {
-         res.json({
-          msg: "wrong inputs / Email already taken",
-        });
-      } else {
-        const user = await User.create({
-          email: req.body.email,
-          password: req.body.password,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-        });
-        const userId: any = user._id;
-        const token = jwt.sign({ userId }, JWT_SECRET); // creates the jwt token using their id and the secret key
-        res.json({
-          msg: "user created successfully",
-          token: token,
-        });
-      }
+      const userId: any = user._id;
+      const token = jwt.sign({ userId }, JWT_SECRET); // creates the jwt token using their id and the secret key
+      res.json({
+        msg: "user created successfully",
+        token: token,
+      });
     }
   }
-);
+});
 
 const LoginSchema = z.object({
   email: z.string().email(),
   password: z.string(),
 });
 
-userRouter.post("/login",//
-async (req: Request, res: Response) => {
+userRouter.post(
+  "/login", //
+  async (req: Request, res: Response) => {
     try {
       const parsed = LoginSchema.safeParse(req.body);
       if (!parsed.success) {
-         res.status(411).json({
+        res.status(411).json({
           msg: "input incorrect",
         });
       }
@@ -77,9 +74,7 @@ async (req: Request, res: Response) => {
         res.json({
           token: token,
         });
-        
       }
-      
     } catch (error) {
       res.status(401).json({
         message: "Error while logging in",
@@ -88,6 +83,4 @@ async (req: Request, res: Response) => {
   }
 );
 
-
-
-export  {userRouter};
+export { userRouter };
