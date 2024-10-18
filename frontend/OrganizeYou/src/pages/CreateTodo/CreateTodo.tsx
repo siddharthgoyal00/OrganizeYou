@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Button } from "../../components/Button";
 import { Heading } from "../../components/Heading";
 import { InputBox } from "../../components/InputBox"
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const CreateTodo = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
- 
+  const navigate = useNavigate()
   return (
     <div>
       <div className="bg-slate-100 h-screen flex justify-center">
@@ -28,12 +30,28 @@ export const CreateTodo = () => {
               label={"Description"}
             />
             <div className="pt-4">
-            <Button 
-            label={"create"} 
-            onClick={()=>{
-                const todo = { title, description };
-                console.log(todo);
-            }}/>
+              
+            <Button label="Create"
+            onClick={async () => {
+              try {
+                const response = await axios.post(
+                  "http://localhost:3001/createtodo",
+                  {
+                    title: title,                    
+                    description: description,
+                  }
+                );
+                localStorage.setItem("token", response.data.token);
+                navigate("/home");
+              } catch (error) {
+                console.log(error)
+                // navigate("/home");
+                
+              }
+            }
+          }
+            
+            />
             </div>
           </div>
         </div>

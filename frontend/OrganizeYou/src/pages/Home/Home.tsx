@@ -1,10 +1,15 @@
 
 
 
+import { BottomWarning } from "../../components/BottomWarning";
+
 export const Home = () => {
+
   return (
     <div>
-    <button> + Add</button>
+    <BottomWarning label={"create a todo "}
+              buttonText={"Add"}
+              to={"/createtodo"}></BottomWarning>
     </div>
   );
 };
