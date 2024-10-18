@@ -1,13 +1,13 @@
 import express, { Request, Response } from "express";
 import z from "zod";
 import { Todo } from "../db";
-const todoRouter = express.Router();
 
 const todoSchema = z.object({
   title: z.string(),
   description: z.string(),
   userId: z.string()
 });
+const todoRouter = express.Router();
 
 todoRouter.post("/createtodo", async (req: Request, res: Response) => {
   console.log(req.headers);
@@ -20,10 +20,10 @@ todoRouter.post("/createtodo", async (req: Request, res: Response) => {
       msg: "title already exists",
     });
   } 
-    const existingTodo = await Todo.findOne({
+    const existingTodo:Array<object> | null= await Todo.findOne({
       title: req.body.title,
     });
-    if (existingTodo) {
+    if (existingTodo!.length!=0) {
       res.json({
         msg: "wrong inputs",
       });
@@ -46,3 +46,5 @@ todoRouter.post("/createtodo", async (req: Request, res: Response) => {
     
   }
 );
+export default todoRouter ;
+
