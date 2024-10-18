@@ -31,7 +31,29 @@ const userSchema = new mongoose.Schema({
         maxLength:20
     }
 
-});
+})
+
+const todoSchema =  new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId, // Reference to User model
+        ref: 'User',
+        required: true
+    },
+    title : {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        maxLength: 50,
+    } ,
+
+    description : {
+        type : String,
+        trim: true ,
+         
+    }
+})
 
 const User = mongoose.model('User', userSchema);
-export { User };
+const Todo = mongoose.model('Todo', todoSchema )
+export { User, Todo };
