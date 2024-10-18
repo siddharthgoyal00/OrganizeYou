@@ -1,11 +1,10 @@
-import { Navbar } from "../../components/Navbar"
-import { Login } from "../Login/Login"
 
-export const Home = ()=>{
-    return <div>
-        <Navbar></Navbar>
-        <div>
-          
-        </div>
+
+
+export const Home = () => {
+  return (
+    <div>
+    <button> + Add</button>
     </div>
-}
+  );
+};
