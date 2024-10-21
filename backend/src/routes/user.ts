@@ -20,7 +20,7 @@ userRouter.post("/signup", async (req: Request, res: Response) => {
   console.log(req.body);
 
   const parsed = signUpSchema.safeParse(req.body);
-  console.log(parsed.error);
+  console.log("Zod parsing error ",parsed.error);
   if (!parsed.success && !req.body) {
     res.json({
       msg: "wrong inputs / Email already taken",
@@ -44,7 +44,7 @@ userRouter.post("/signup", async (req: Request, res: Response) => {
       const token = jwt.sign({ userId }, JWT_SECRET); // creates the jwt token using their id and the secret key
       res.json({
         msg: "user created successfully",
-        token: token,
+        token: token, 
       });
     }
   }

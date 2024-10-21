@@ -8,6 +8,7 @@ import axios from "axios";
 export const CreateTodo = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  
   const navigate = useNavigate()
   return (
     <div>
@@ -33,12 +34,20 @@ export const CreateTodo = () => {
               
             <Button label="Create"
             onClick={async () => {
+              const userId = localStorage.getItem("token");
+              // const userId  = localStorage.getItem("userId")
               try {
                 const response = await axios.post(
-                  "http://localhost:3001/createtodo",
+                  "http://localhost:3001/todo/createtodo",
                   {
                     title: title,                    
                     description: description,
+                    userId:userId
+                  },
+                  {
+                    headers: {
+                      'Authorization': `Bearer ${'token'}`, // Add the Authorization header
+                    },
                   }
                 );
                 localStorage.setItem("token", response.data.token);

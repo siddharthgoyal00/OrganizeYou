@@ -1,17 +1,20 @@
 import express, { Request, Response } from "express";
 import z from "zod";
 import { Todo } from "../db";
-
+import { authMiddleware } from "../middleware";
+const todoRouter = express.Router();
 const todoSchema = z.object({
   title: z.string(),
   description: z.string(),
-  userId: z.string()
 });
-const todoRouter = express.Router();
 
-todoRouter.post("/createtodo", async (req: Request, res: Response) => {
+
+todoRouter.post("/createtodo", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   console.log(req.headers);
   console.log(req.body);
+  if (!req.body.userId){
+   res.status(400).json({msg: "userId is required "})
+  }
   try{
   const parsed = todoSchema.safeParse(req.body);
   console.log(parsed.error);
@@ -25,8 +28,9 @@ todoRouter.post("/createtodo", async (req: Request, res: Response) => {
     });
     if (existingTodo!.length!=0) {
       res.json({
-        msg: "wrong inputs",
+        msg: "title exists",
       });
+      
     }
       const newtodo = await Todo.create({
         title: req.body.title,
@@ -37,6 +41,7 @@ todoRouter.post("/createtodo", async (req: Request, res: Response) => {
         msg: "new todo created",
         todo: newtodo
       })
+      
     }
       catch (error) {
         res.status(401).json({
