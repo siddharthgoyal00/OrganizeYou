@@ -34,7 +34,7 @@ export const CreateTodo = () => {
               
             <Button label="Create"
             onClick={async () => {
-              const userId = localStorage.getItem("token");
+              const token = localStorage.getItem("token");
               // const userId  = localStorage.getItem("userId")
               try {
                 const response = await axios.post(
@@ -42,15 +42,16 @@ export const CreateTodo = () => {
                   {
                     title: title,                    
                     description: description,
-                    userId:userId
+                    userId:token
                   },
                   {
                     headers: {
-                      'Authorization': `Bearer ${'token'}`, // Add the Authorization header
+                      'Authorization': `Bearer ${token}`, // Add the Authorization header
                     },
                   }
                 );
                 localStorage.setItem("token", response.data.token);
+                console.log('todo created')
                 navigate("/home");
               } catch (error) {
                 console.log(error)
