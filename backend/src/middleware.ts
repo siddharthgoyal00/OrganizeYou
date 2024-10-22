@@ -20,7 +20,7 @@ export const authMiddleware = (req: any, res: any, next:any) => {
         }else{
             throw new Error("user id not found!")
         }
-
+          
         next();
     } catch (err) {
         console.error("JWT Verification Failed:", err);
