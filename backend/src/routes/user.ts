@@ -55,9 +55,7 @@ const LoginSchema = z.object({
   password: z.string(),
 });
 
-userRouter.post(
-  "/login", //
-  async (req: Request, res: Response) => {
+userRouter.post("/login", async (req: Request, res: Response) => {
     try {
       const parsed = LoginSchema.safeParse(req.body);
       if (!parsed.success) {

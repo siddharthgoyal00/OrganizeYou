@@ -10,8 +10,8 @@ const todoSchema = z.object({
 
 
 todoRouter.post("/createtodo", authMiddleware, async (req: Request, res: Response): Promise<void> => {
-  console.log(req.headers);
-  console.log(req.body);
+  console.log("headers",req.headers);
+  console.log("Body",req.body);
   if (!req.body.userId){
    res.status(400).json({msg: "userId is required "})
   }
@@ -23,11 +23,9 @@ todoRouter.post("/createtodo", authMiddleware, async (req: Request, res: Respons
       msg: "title already exists",
     });
   } 
-    const existingTodo:Array<object> | null= await Todo.findOne({
-      title: req.body.title,
-    });
-    if (existingTodo!.length!=0) {
-      res.json({
+    const existingTodo:Array<object> | null= await Todo.findOne({title: req.body.title});
+    if (existingTodo) {
+      res.status(400).json({
         msg: "title exists",
       });
       

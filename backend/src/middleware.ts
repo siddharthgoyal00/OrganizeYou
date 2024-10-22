@@ -24,6 +24,6 @@ export const authMiddleware = (req: any, res: any, next:any) => {
         next();
     } catch (err) {
         console.error("JWT Verification Failed:", err);
-        return res.status(403).json({});
+        res.status(403).json({});
     }
 };
